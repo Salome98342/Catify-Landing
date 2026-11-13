@@ -1,0 +1,2261 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font:
+          14px -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #fff;
+        color: #000;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden]:not([hidden='until-found' i]) {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Catify</title>
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@400;500&display=swap"
+    />
+    <style>
+      /* Concepto: la plataforma Catify tal como se ve hoy. Blanco y menta muy pálido, verde bosque como único acento, Playfair en titulares grandes con tracking apretado y DM Sans en todo lo demás. La banda beige es el tema de una tienda de ejemplo. Movimiento contenido: titular que sube con máscara, tarjetas que flotan, aparición al hacer scroll y microinteracciones en botones y tarjetas. */
+      :root {
+        --bg: #ffffff;
+        --mint: #f4f8f4;
+        --mint-2: #e8f0e8;
+        --mint-3: #d3e5d8;
+        --ink: #14241b;
+        --muted: #56665d;
+        --line: #dce5dd;
+        --green: #277a4b;
+        --green-deep: #1b5a37;
+        --green-text: #1f6b3f;
+        --on-green: #ffffff;
+        --night: #10201a;
+        --on-night: #eaf2ec;
+        --warm: #f5ebdd;
+        --warm-surface: #fdfbf7;
+        --warm-line: #e6d8c2;
+        --terra: #a9533b;
+        --teal: #44636a;
+        --shadow: 0 18px 40px -24px rgba(20, 36, 27, 0.35);
+        --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+        --font-body:
+          'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+        --sky: #e3f1e8;
+        --sun: #f5b83d;
+        --moon: #f3f1e6;
+      }
+      :root[data-theme='dark'] {
+        --sky: #0f1c16;
+        --bg: #0e1813;
+        --mint: #12201a;
+        --mint-2: #1a2b22;
+        --mint-3: #27402f;
+        --ink: #e9f1eb;
+        --muted: #9db0a5;
+        --line: #25362c;
+        --green: #3fa46a;
+        --green-deep: #2a7a4b;
+        --green-text: #6ccb93;
+        --on-green: #0b1410;
+        --night: #0a120e;
+        --on-night: #eaf2ec;
+        --warm: #221e18;
+        --warm-surface: #2b261f;
+        --warm-line: #3a3329;
+        --terra: #d9795f;
+        --teal: #86aab1;
+        --shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.7);
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0 0 auto;
+        height: env(safe-area-inset-top, 0px);
+        z-index: 40;
+        background: var(--bg);
+      }
+      a {
+        color: inherit;
+      }
+      p {
+        margin: 0;
+      }
+      :focus-visible {
+        outline: 3px solid var(--green);
+        outline-offset: 3px;
+        border-radius: 8px;
+      }
+      .wrap {
+        max-width: 1160px;
+        margin: 0 auto;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-display);
+        font-weight: 400;
+        letter-spacing: -0.03em;
+        line-height: 1.02;
+        margin: 0;
+        text-wrap: balance;
+      }
+      h2 {
+        font-size: clamp(34px, 5.2vw, 64px);
+      }
+      h3 {
+        font-size: 26px;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--green-text);
+      }
+      .eyebrow::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        flex: none;
+      }
+      .eyebrow.live::before {
+        animation: pulse 2s ease-out infinite;
+      }
+      .lead {
+        font-size: clamp(17px, 1.8vw, 20px);
+        color: var(--muted);
+        max-width: 56ch;
+      }
+      .band {
+        padding-block: clamp(64px, 10vw, 128px);
+      }
+      .band.mint {
+        background: var(--mint);
+      }
+      .band.warm {
+        background: var(--warm);
+      }
+      .band.night {
+        background: var(--night);
+        color: var(--on-night);
+      }
+      .band.tight {
+        padding-block: clamp(40px, 6vw, 72px);
+      }
+      .view[hidden] {
+        display: none !important;
+      }
+
+      /* Header */
+      .site-head {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 30;
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--line);
+      }
+      .head-in {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px 24px;
+        padding-block: 16px;
+      }
+      .brand {
+        font-weight: 700;
+        font-size: 17px;
+        letter-spacing: 0.3em;
+        text-decoration: none;
+      }
+      .brand i {
+        font-style: normal;
+        color: var(--green);
+      }
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 2px 4px;
+      }
+      .nav a {
+        text-decoration: none;
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: var(--muted);
+        transition:
+          color 0.2s,
+          background 0.2s;
+      }
+      .nav a:hover,
+      .nav a[aria-current='page'] {
+        color: var(--ink);
+        background: var(--mint-2);
+      }
+      .nav a.nav-cta {
+        background: var(--green);
+        color: var(--on-green);
+        font-weight: 700;
+        margin-left: 6px;
+      }
+      .nav a.nav-cta:hover {
+        background: var(--green-deep);
+        color: #fff;
+      }
+
+      .head-right {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 10px;
+      }
+      .theme-toggle {
+        position: relative;
+        width: 46px;
+        height: 46px;
+        padding: 0;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: var(--sky);
+        cursor: pointer;
+        overflow: hidden;
+        flex: none;
+        transition:
+          background-color 0.6s,
+          border-color 0.6s,
+          transform 0.3s var(--ease);
+      }
+      .theme-toggle:hover {
+        transform: scale(1.07);
+      }
+      .theme-toggle:active {
+        transform: scale(0.94);
+      }
+      .orb {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        transition: transform 0.8s cubic-bezier(0.5, 0, 0.2, 1);
+      }
+      .orb svg {
+        width: 26px;
+        height: 26px;
+        overflow: visible;
+      }
+      .sun-wrap {
+        transform: translateY(0);
+      }
+      .moon-wrap {
+        transform: translateY(130%);
+      }
+      :root[data-theme='dark'] .sun-wrap {
+        transform: translateY(130%);
+      }
+      :root[data-theme='dark'] .moon-wrap {
+        transform: translateY(0);
+        transition-delay: 0.12s;
+      }
+      .rays {
+        transform-origin: 12px 12px;
+        animation: spin 16s linear infinite;
+      }
+      .sun {
+        animation: sunpulse 3.2s ease-in-out infinite alternate;
+      }
+      .moon {
+        animation: rock 5s ease-in-out infinite;
+      }
+      .stars i {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: #fff;
+        opacity: 0;
+        transition: opacity 0.6s 0.35s;
+      }
+      .stars i:nth-child(1) {
+        top: 9px;
+        left: 11px;
+      }
+      .stars i:nth-child(2) {
+        top: 15px;
+        right: 8px;
+        width: 2px;
+        height: 2px;
+      }
+      .stars i:nth-child(3) {
+        bottom: 9px;
+        left: 13px;
+        width: 2px;
+        height: 2px;
+      }
+      :root[data-theme='dark'] .stars i {
+        opacity: 1;
+        animation: twinkle 2.4s ease-in-out infinite;
+      }
+      :root[data-theme='dark'] .stars i:nth-child(2) {
+        animation-delay: 0.8s;
+      }
+      :root[data-theme='dark'] .stars i:nth-child(3) {
+        animation-delay: 1.5s;
+      }
+      .theming *:not(.orb, .orb *) {
+        transition:
+          background-color 0.6s,
+          color 0.6s,
+          border-color 0.6s,
+          fill 0.6s,
+          stroke 0.6s !important;
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        font: 700 14px/1 var(--font-body);
+        padding: 9px 9px 9px 24px;
+        min-height: 50px;
+        border-radius: 999px;
+        border: 0;
+        text-decoration: none;
+        cursor: pointer;
+        background: var(--green);
+        color: var(--on-green);
+        box-shadow: 0 12px 24px -14px var(--green);
+        transition:
+          transform 0.3s var(--ease),
+          box-shadow 0.3s var(--ease),
+          background 0.2s;
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 18px 28px -14px var(--green);
+      }
+      .btn-ic {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--green-deep);
+        display: grid;
+        place-items: center;
+        transition: transform 0.3s var(--ease);
+      }
+      .btn:hover .btn-ic {
+        transform: translateX(4px);
+      }
+      .btn-ic svg {
+        width: 16px;
+        height: 16px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .btn.plain {
+        padding: 0 22px;
+        justify-content: center;
+      }
+      .btn.plain.soft {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        box-shadow: none;
+      }
+      .btn.plain.soft:hover {
+        background: var(--mint-2);
+        box-shadow: none;
+      }
+      .btn.sm {
+        min-height: 42px;
+        font-size: 13px;
+      }
+      .btn.inv {
+        background: var(--on-night);
+        color: var(--night);
+        box-shadow: none;
+      }
+      .btn.inv .btn-ic {
+        background: var(--night);
+      }
+      .btn.inv .btn-ic svg {
+        stroke: var(--on-night);
+      }
+      .link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--green-text);
+        text-decoration: none;
+        padding: 12px 4px;
+        border-bottom: 1px solid transparent;
+      }
+      .link:hover {
+        border-bottom-color: var(--green-text);
+      }
+      .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px 22px;
+      }
+
+      /* Hero */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        background: var(--mint);
+      }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.6;
+        pointer-events: none;
+        animation: drift 20s ease-in-out infinite alternate;
+      }
+      .blob.a {
+        width: 420px;
+        height: 420px;
+        right: -80px;
+        top: -80px;
+        background: var(--mint-3);
+      }
+      .blob.b {
+        width: 320px;
+        height: 320px;
+        left: -100px;
+        bottom: -120px;
+        background: color-mix(in srgb, var(--green) 22%, var(--mint));
+        animation-duration: 26s;
+        animation-direction: alternate-reverse;
+      }
+      .hero-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+        gap: 56px;
+        align-items: center;
+        padding-block: clamp(56px, 9vw, 120px);
+      }
+      .hero h1 {
+        font-size: clamp(68px, 13vw, 184px);
+        line-height: 0.9;
+        margin: 26px 0 28px;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--green);
+      }
+      .mask {
+        display: block;
+        overflow: hidden;
+        padding-bottom: 0.16em;
+        margin-bottom: -0.16em;
+      }
+      .mask > span {
+        display: inline-block;
+        animation: maskup 1s var(--ease) both;
+        animation-delay: var(--d, 0s);
+      }
+      .hero .lead {
+        margin-bottom: 36px;
+      }
+      .load-in {
+        animation: rise 0.9s var(--ease) both;
+        animation-delay: var(--d, 0s);
+      }
+      .stack {
+        display: grid;
+        gap: 14px;
+      }
+      .stack-note {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .mini {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 16px 18px;
+        box-shadow: var(--shadow);
+        animation: float 7s ease-in-out infinite;
+        animation-delay: var(--f, 0s);
+      }
+      .stack > .load-in:nth-child(2) .mini {
+        margin-left: 28px;
+      }
+      .mini .ltr {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: var(--mint-3);
+        color: var(--green-text);
+        display: grid;
+        place-items: center;
+        font-family: var(--font-display);
+        font-size: 26px;
+        flex: none;
+      }
+      .mini small {
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--green-text);
+      }
+      .mini b {
+        display: block;
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 21px;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+      .mini .txt {
+        min-width: 0;
+      }
+
+      /* Marquee */
+      .marquee {
+        overflow: hidden;
+        border-block: 1px solid var(--line);
+        padding-block: 18px;
+        -webkit-mask-image: linear-gradient(
+          90deg,
+          transparent,
+          #000 8%,
+          #000 92%,
+          transparent
+        );
+        mask-image: linear-gradient(
+          90deg,
+          transparent,
+          #000 8%,
+          #000 92%,
+          transparent
+        );
+      }
+      .track {
+        display: flex;
+        gap: 12px;
+        width: max-content;
+        animation: scroll 42s linear infinite;
+      }
+      .marquee:hover .track {
+        animation-play-state: paused;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: 14px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .chip::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+
+      /* Statement */
+      .statement {
+        font-family: var(--font-display);
+        font-size: clamp(28px, 4.4vw, 56px);
+        line-height: 1.18;
+        letter-spacing: -0.025em;
+        max-width: 24em;
+        color: color-mix(in srgb, var(--ink) 55%, var(--bg));
+      }
+      .statement b {
+        font-weight: 400;
+        color: var(--ink);
+      }
+      .statement i {
+        font-style: normal;
+        color: var(--green);
+      }
+      .section-head {
+        display: grid;
+        gap: 18px;
+        margin-bottom: clamp(32px, 5vw, 56px);
+      }
+
+      /* Steps */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 0 40px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .steps li {
+        position: relative;
+        padding: 30px 0 8px;
+        display: grid;
+        gap: 12px;
+        align-content: start;
+        min-width: 0;
+      }
+      .steps li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 1px;
+        background: var(--line);
+      }
+      .steps li::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 2px;
+        width: 56px;
+        background: var(--green);
+        transition: width 0.5s var(--ease);
+      }
+      .steps li:hover::after {
+        width: 100%;
+      }
+      .num {
+        font-family: var(--font-display);
+        font-size: 64px;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        color: var(--mint-3);
+      }
+      .steps p,
+      .feature p,
+      .plan .sub {
+        color: var(--muted);
+      }
+
+      /* Catalog preview */
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        gap: clamp(32px, 6vw, 80px);
+        align-items: center;
+      }
+      .store {
+        background: var(--warm-surface);
+        border: 1px solid var(--warm-line);
+        border-radius: 25px;
+        padding: clamp(18px, 3vw, 30px);
+        display: grid;
+        gap: 18px;
+        box-shadow: var(--shadow);
+        min-width: 0;
+        color: #2a241c;
+      }
+      :root[data-theme='dark'] .store {
+        color: #efe7d9;
+      }
+      .store-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .store-top strong {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 28px;
+        letter-spacing: -0.03em;
+      }
+      .cart-pill {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: #2a241c;
+        color: #fff;
+        white-space: nowrap;
+      }
+      :root[data-theme='dark'] .cart-pill {
+        background: #efe7d9;
+        color: #221e18;
+      }
+      .cart-pill.bump {
+        animation: bump 0.4s var(--ease);
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--bg);
+        border: 1px solid var(--warm-line);
+        border-radius: 999px;
+        padding: 12px 18px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .search svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+      }
+      .prods {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 14px;
+      }
+      .prod {
+        background: var(--bg);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--warm-line);
+        transition:
+          transform 0.35s var(--ease),
+          box-shadow 0.35s var(--ease);
+        min-width: 0;
+      }
+      .prod:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+      }
+      .prod .img {
+        aspect-ratio: 4 / 3;
+        display: grid;
+        place-items: center;
+        font-family: var(--font-display);
+        font-size: 44px;
+        color: var(--teal);
+        background: color-mix(
+          in srgb,
+          var(--warm-line) 55%,
+          var(--warm-surface)
+        );
+      }
+      .prod .body {
+        padding: 12px 14px 14px;
+        display: grid;
+        gap: 4px;
+      }
+      .prod b {
+        font-weight: 500;
+        font-size: 15px;
+      }
+      .prod .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 8px;
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .add {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        border: 0;
+        background: var(--terra);
+        color: #fff;
+        font: 700 18px/1 var(--font-body);
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .add:hover {
+        transform: scale(1.1);
+      }
+      .add:active {
+        transform: scale(0.92);
+      }
+      .store-note {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* Features */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+      .feature {
+        padding: 32px 28px 32px 0;
+        display: grid;
+        gap: 12px;
+        align-content: start;
+        border-top: 1px solid var(--line);
+        min-width: 0;
+      }
+      .feature svg {
+        width: 30px;
+        height: 30px;
+        stroke: var(--green);
+        fill: none;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: transform 0.4s var(--ease);
+      }
+      .feature:hover svg {
+        transform: translateY(-4px) rotate(-4deg);
+      }
+
+      /* Plans */
+      .plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+      }
+      .plan {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 32px;
+        display: grid;
+        gap: 18px;
+        align-content: start;
+        min-width: 0;
+        transition:
+          transform 0.4s var(--ease),
+          box-shadow 0.4s var(--ease);
+      }
+      .plan:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow);
+      }
+      .plan.featured {
+        background: var(--night);
+        color: var(--on-night);
+        border-color: var(--night);
+      }
+      .plan.featured .sub {
+        color: color-mix(in srgb, var(--on-night) 70%, transparent);
+      }
+      .plan.featured .tag {
+        background: color-mix(in srgb, var(--on-night) 14%, transparent);
+        color: var(--on-night);
+      }
+      .band.night .plan.featured {
+        background: var(--green-deep);
+        border-color: var(--green-deep);
+      }
+      .tag {
+        justify-self: start;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--mint-2);
+        color: var(--green-text);
+      }
+      .plan ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 12px;
+      }
+      .plan li {
+        display: grid;
+        grid-template-columns: 20px 1fr;
+        gap: 10px;
+        font-size: 15px;
+      }
+      .plan li svg {
+        width: 18px;
+        height: 18px;
+        margin-top: 3px;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .plan li.yes svg {
+        stroke: var(--green);
+      }
+      .plan.featured li.yes svg {
+        stroke: #7fe0a6;
+      }
+      .plan li.no {
+        opacity: 0.6;
+      }
+      .plan li.no svg {
+        stroke: currentColor;
+      }
+      .price-soon {
+        font-size: 13px;
+        opacity: 0.7;
+        border-top: 1px dashed color-mix(in srgb, currentColor 30%, transparent);
+        padding-top: 16px;
+      }
+      .table-scroll {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--bg);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 560px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 16px 22px;
+        border-bottom: 1px solid var(--line);
+        font-size: 15px;
+        vertical-align: top;
+      }
+      th {
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--green-text);
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      td:first-child {
+        font-weight: 700;
+      }
+
+      /* Acompaña */
+      .checklist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 14px;
+      }
+      .checklist li {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 12px;
+      }
+      .checklist svg {
+        width: 20px;
+        height: 20px;
+        margin-top: 3px;
+        stroke: var(--green);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .band.night .checklist svg {
+        stroke: #7fe0a6;
+      }
+      .band.night .lead {
+        color: color-mix(in srgb, var(--on-night) 72%, transparent);
+      }
+      .band.night .eyebrow {
+        color: #7fe0a6;
+      }
+      .band.night .eyebrow::before {
+        background: #7fe0a6;
+      }
+      .panel {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: clamp(24px, 3vw, 40px);
+        display: grid;
+        gap: 20px;
+        min-width: 0;
+      }
+      .template {
+        background: var(--mint);
+        border: 1px dashed var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        font-size: 15px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .status {
+        font-size: 13px;
+        color: var(--muted);
+        min-height: 1.4em;
+      }
+
+      /* FAQ */
+      .faq-group {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 44px;
+      }
+      .faq-group h3 {
+        margin-bottom: 10px;
+      }
+      details {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        transition: border-color 0.2s;
+      }
+      details:hover,
+      details[open] {
+        border-color: var(--green);
+      }
+      summary {
+        cursor: pointer;
+        list-style: none;
+        padding: 20px 24px;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      summary::after {
+        content: '+';
+        font-size: 24px;
+        color: var(--green);
+        line-height: 1;
+        flex: none;
+        transition: transform 0.3s var(--ease);
+      }
+      details[open] summary::after {
+        transform: rotate(45deg);
+      }
+      details p {
+        padding: 0 24px 22px;
+        color: var(--muted);
+        max-width: 70ch;
+        animation: rise 0.4s var(--ease) both;
+      }
+
+      /* Contact */
+      .contact {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .contact .panel {
+        gap: 14px;
+      }
+      .contact .big {
+        font-family: var(--font-display);
+        font-size: clamp(22px, 3vw, 32px);
+        letter-spacing: -0.02em;
+        overflow-wrap: anywhere;
+        line-height: 1.15;
+      }
+
+      .page-intro {
+        display: grid;
+        gap: 22px;
+        padding-block: clamp(56px, 8vw, 104px) clamp(40px, 6vw, 72px);
+      }
+      .page-intro h1 {
+        font-size: clamp(48px, 9vw, 120px);
+        line-height: 0.95;
+      }
+      .site-foot {
+        border-top: 1px solid var(--line);
+        padding-block: 36px 56px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 32px;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .theme-btn {
+        font: 500 13px var(--font-body);
+        background: none;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 8px 14px;
+        cursor: pointer;
+      }
+      .theme-btn:hover {
+        background: var(--mint-2);
+      }
+
+      /* Movimiento */
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes maskup {
+        from {
+          transform: translateY(108%);
+        }
+        to {
+          transform: none;
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-9px);
+        }
+      }
+      @keyframes drift {
+        from {
+          transform: translate(0, 0) scale(1);
+        }
+        to {
+          transform: translate(40px, 30px) scale(1.12);
+        }
+      }
+      @keyframes scroll {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 50%, transparent);
+        }
+        100% {
+          box-shadow: 0 0 0 12px transparent;
+        }
+      }
+      @keyframes bump {
+        40% {
+          transform: scale(1.12);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes sunpulse {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.1);
+        }
+      }
+      @keyframes rock {
+        0%,
+        100% {
+          transform: rotate(-8deg);
+        }
+        50% {
+          transform: rotate(8deg);
+        }
+      }
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0.25;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      @supports (animation-timeline: view()) {
+        .reveal {
+          animation: rise linear both;
+          animation-timeline: view();
+          animation-range: entry 4% cover 26%;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .hero-grid,
+        .split {
+          grid-template-columns: 1fr;
+        }
+        .hero-grid {
+          gap: 40px;
+        }
+        .stack > .load-in:nth-child(2) .mini {
+          margin-left: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+
+    <header class="site-head">
+      <div class="wrap head-in">
+        <a class="brand" href="#inicio" aria-label="Catify, ir al inicio"
+          >CATIFY<i>.</i></a
+        >
+        <div class="head-right">
+          <nav class="nav" aria-label="Principal">
+            <a href="#inicio" data-nav="inicio">Inicio</a>
+            <a href="#planes" data-nav="planes">Planes</a>
+            <a href="#del-valle-te-acompana" data-nav="del-valle-te-acompana"
+              >Del Valle te acompaña</a
+            >
+            <a href="#preguntas-frecuentes" data-nav="preguntas-frecuentes"
+              >Preguntas</a
+            >
+            <a
+              class="nav-cta"
+              href="#lista-de-espera"
+              data-nav="lista-de-espera"
+              >Lista de espera</a
+            >
+          </nav>
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            type="button"
+            aria-label="Cambiar a tema oscuro"
+            aria-pressed="false"
+            title="Cambiar tema"
+          >
+            <span class="orb sun-wrap" aria-hidden="true"
+              ><svg class="sun" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="4.5" fill="var(--sun)" />
+                <g
+                  class="rays"
+                  stroke="var(--sun)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path
+                    d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"
+                  />
+                </g></svg
+            ></span>
+            <span class="orb moon-wrap" aria-hidden="true"
+              ><svg class="moon" viewBox="0 0 24 24">
+                <path
+                  d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"
+                  fill="var(--moon)"
+                /></svg
+            ></span>
+            <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- INICIO -->
+      <section class="view" id="v-inicio">
+        <div class="hero">
+          <div class="blob a" aria-hidden="true"></div>
+          <div class="blob b" aria-hidden="true"></div>
+          <div class="wrap hero-grid">
+            <div>
+              <span class="eyebrow live load-in"
+                >Estamos terminando Catify</span
+              >
+              <h1 aria-label="Muy pronto.">
+                <span class="mask" aria-hidden="true"
+                  ><span style="--d: 0.1s">Muy</span></span
+                >
+                <span class="mask" aria-hidden="true"
+                  ><span style="--d: 0.22s">pronto<em>.</em></span></span
+                >
+              </h1>
+              <p class="lead load-in" style="--d: 0.5s">
+                Catify es el lugar donde tu negocio publica su catálogo, recibe
+                pedidos y les hace seguimiento. Un mundo de negocios por
+                descubrir.
+              </p>
+              <div class="btn-row load-in" style="--d: 0.65s">
+                <a class="btn" href="#lista-de-espera"
+                  ><span>Quiero enterarme primero</span
+                  ><span class="btn-ic"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" /></svg></span
+                ></a>
+                <a class="link" href="#planes">Ver los planes</a>
+              </div>
+            </div>
+            <div class="stack" aria-label="Negocios de ejemplo">
+              <div class="load-in" style="--d: 0.55s">
+                <div class="mini" style="--f: 0s">
+                  <div class="ltr">C</div>
+                  <div class="txt">
+                    <small>Cafetería</small><b>Café Aroma</b>
+                  </div>
+                </div>
+              </div>
+              <div class="load-in" style="--d: 0.7s">
+                <div class="mini" style="--f: -2.4s">
+                  <div class="ltr">F</div>
+                  <div class="txt">
+                    <small>Ferretería</small><b>Ferretería El Tornillo</b>
+                  </div>
+                </div>
+              </div>
+              <div class="load-in" style="--d: 0.85s">
+                <div class="mini" style="--f: -4.6s">
+                  <div class="ltr">T</div>
+                  <div class="txt">
+                    <small>Tienda nueva</small><b>Tu negocio, aquí</b>
+                  </div>
+                </div>
+              </div>
+              <p class="stack-note load-in" style="--d: 1s">
+                Negocios de ejemplo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="marquee" aria-hidden="true">
+          <div class="track" id="track"></div>
+        </div>
+
+        <div class="band">
+          <div class="wrap">
+            <p class="statement reveal">
+              Catify es el lugar donde cada <b>negocio local</b> publica su
+              <i>catálogo</i>, recibe <b>pedidos</b> y les hace seguimiento, sin
+              perder ventas entre mensajes.
+            </p>
+          </div>
+        </div>
+
+        <div class="band mint">
+          <div class="wrap">
+            <div class="section-head reveal">
+              <span class="eyebrow">Cómo funcionará</span>
+              <h2>De tu catálogo al pedido<br />en tres pasos</h2>
+            </div>
+            <ol class="steps reveal">
+              <li>
+                <span class="num">1</span>
+                <h3>Arma tu catálogo</h3>
+                <p>
+                  Crea categorías y productos, con adicionales que tienen su
+                  propio precio, y elige colores, portada y textos.
+                </p>
+              </li>
+              <li>
+                <span class="num">2</span>
+                <h3>Comparte tu enlace</h3>
+                <p>
+                  Tus clientes abren el catálogo, arman su carrito y hacen el
+                  pedido. Pueden hacerlo sin crear una cuenta.
+                </p>
+              </li>
+              <li>
+                <span class="num">3</span>
+                <h3>Atiende cada pedido</h3>
+                <p>
+                  Los pedidos llegan a tu panel. Cambias su estado y tu cliente
+                  ve cómo avanza.
+                </p>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="band warm">
+          <div class="wrap split">
+            <div class="section-head reveal" style="margin: 0">
+              <span class="eyebrow">Tu tienda</span>
+              <h2>Cada tienda, a su estilo</h2>
+              <p class="lead">
+                Cada negocio elige sus colores, su portada y sus textos. Así se
+                verá un catálogo de ejemplo. Toca el botón + para probarlo.
+              </p>
+            </div>
+            <div
+              class="store reveal"
+              aria-label="Vista de ejemplo de un catálogo"
+            >
+              <div class="store-top">
+                <strong>Café Aroma</strong
+                ><span class="cart-pill" id="cart-pill" aria-live="polite"
+                  >Carrito · 0</span
+                >
+              </div>
+              <div class="search">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20l-3.5-3.5" /></svg
+                >Buscar productos...
+              </div>
+              <div class="prods">
+                <div class="prod">
+                  <div class="img">E</div>
+                  <div class="body">
+                    <b>Espresso</b
+                    ><span style="font-size: 13px; color: var(--muted)"
+                      >Corto e intenso.</span
+                    >
+                    <div class="row">
+                      <span>$ 6.000</span
+                      ><button
+                        class="add"
+                        type="button"
+                        aria-label="Agregar Espresso"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="prod">
+                  <div class="img">C</div>
+                  <div class="body">
+                    <b>Cappuccino</b
+                    ><span style="font-size: 13px; color: var(--muted)"
+                      >Con leche vaporizada.</span
+                    >
+                    <div class="row">
+                      <span>$ 9.000</span
+                      ><button
+                        class="add"
+                        type="button"
+                        aria-label="Agregar Cappuccino"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="prod">
+                  <div class="img">L</div>
+                  <div class="body">
+                    <b>Latte</b
+                    ><span style="font-size: 13px; color: var(--muted)"
+                      >Suave y cremoso.</span
+                    >
+                    <div class="row">
+                      <span>$ 9.500</span
+                      ><button
+                        class="add"
+                        type="button"
+                        aria-label="Agregar Latte"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="store-note">
+                Vista de ejemplo. Los productos y precios son de muestra.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="band">
+          <div class="wrap">
+            <div class="section-head reveal">
+              <span class="eyebrow">Lo que tendrá</span>
+              <h2>Pensado para<br />negocios de barrio</h2>
+            </div>
+            <div class="features reveal">
+              <div class="feature">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M4 7h16l-1.5 11a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7L4 7Z"
+                  />
+                  <path d="M9 7a3 3 0 0 1 6 0" />
+                </svg>
+                <h3>Catálogo público</h3>
+                <p>
+                  Categorías, productos y adicionales con precio, en una página
+                  con el nombre de tu negocio.
+                </p>
+              </div>
+              <div class="feature">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="9" cy="20" r="1.4" />
+                  <circle cx="18" cy="20" r="1.4" />
+                  <path d="M3 4h2.5l2.2 11h10.6L20 8H6.4" />
+                </svg>
+                <h3>Carrito y pedido</h3>
+                <p>
+                  El precio final se calcula en el servidor, así el total
+                  siempre es el correcto.
+                </p>
+              </div>
+              <div class="feature">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="4" y="3.5" width="16" height="17" rx="2.5" />
+                  <path d="M8 9h8M8 13h8M8 17h5" />
+                </svg>
+                <h3>Seguimiento</h3>
+                <p>
+                  Pendiente, confirmado, en preparación, listo, completado o
+                  cancelado, a la vista de tu equipo.
+                </p>
+              </div>
+              <div class="feature">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.8 2-1.7 0-1.3-1.2-1.6-1.2-2.8 0-.9.7-1.5 1.7-1.5H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3Z"
+                  />
+                  <circle cx="7.5" cy="11" r="1" />
+                  <circle cx="10" cy="7.5" r="1" />
+                  <circle cx="14.5" cy="7.5" r="1" />
+                </svg>
+                <h3>Tu estilo</h3>
+                <p>
+                  Elige colores, portada y textos para que la tienda se vea como
+                  tu negocio.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="band mint">
+          <div class="wrap">
+            <div class="section-head reveal">
+              <span class="eyebrow">Planes</span>
+              <h2>Empieza pequeño,<br />crece cuando lo necesites</h2>
+              <p class="lead">
+                Estos son los tres planes que estamos preparando. Aún no tienen
+                precio.
+              </p>
+            </div>
+            <div class="plans reveal" id="home-plans"></div>
+            <div style="margin-top: 36px">
+              <a class="link" href="#planes">Comparar los planes</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="band night">
+          <div class="wrap split">
+            <div class="section-head reveal" style="margin: 0">
+              <span class="eyebrow">Servicio aparte</span>
+              <h2>Del Valle te acompaña</h2>
+              <p class="lead">
+                Si prefieres que un equipo te ayude a gestionar tu negocio en
+                línea, lo hacemos contigo. Se cotiza aparte según lo que
+                necesites.
+              </p>
+              <div>
+                <a class="btn inv" href="#del-valle-te-acompana"
+                  ><span>Conocer el servicio</span
+                  ><span class="btn-ic"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" /></svg></span
+                ></a>
+              </div>
+            </div>
+            <ul
+              class="checklist reveal"
+              id="home-acompana"
+              style="font-size: 18px"
+            ></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- PLANES -->
+      <section class="view" id="v-planes" hidden>
+        <div class="band mint tight">
+          <div class="wrap page-intro">
+            <span class="eyebrow load-in">Planes de Catify</span>
+            <h1 class="load-in" style="--d: 0.1s">Elige cómo empezar</h1>
+            <p class="lead load-in" style="--d: 0.2s">
+              Estamos preparando tres planes. Los precios se anunciarán antes
+              del lanzamiento y las condiciones pueden ajustarse.
+            </p>
+          </div>
+        </div>
+        <div class="band">
+          <div class="wrap">
+            <div class="plans reveal" id="all-plans"></div>
+            <div class="section-head reveal" style="margin-top: 80px">
+              <h2>Comparación</h2>
+            </div>
+            <div class="table-scroll reveal">
+              <table>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Gratis</th>
+                    <th>Básico</th>
+                    <th>Plus</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Inventario</td>
+                    <td>Limitado (5)</td>
+                    <td>Limitado (10)</td>
+                    <td>Ilimitado</td>
+                  </tr>
+                  <tr>
+                    <td>Registro de ventas (módulo contable)</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>Sí</td>
+                  </tr>
+                  <tr>
+                    <td>Del Valle te acompaña</td>
+                    <td>Servicio aparte</td>
+                    <td>Servicio aparte</td>
+                    <td>Servicio aparte</td>
+                  </tr>
+                  <tr>
+                    <td>Precio</td>
+                    <td>Por definir</td>
+                    <td>Por definir</td>
+                    <td>Por definir</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="btn-row" style="margin-top: 48px">
+              <a class="btn" href="#lista-de-espera"
+                ><span>Quiero enterarme primero</span
+                ><span class="btn-ic"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6" /></svg></span
+              ></a>
+              <a class="link" href="#del-valle-te-acompana"
+                >Ver Del Valle te acompaña</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DEL VALLE TE ACOMPAÑA -->
+      <section class="view" id="v-del-valle-te-acompana" hidden>
+        <div class="band mint tight">
+          <div class="wrap page-intro">
+            <span class="eyebrow load-in">Servicio extra</span>
+            <h1 class="load-in" style="--d: 0.1s">
+              Del Valle<br />te acompaña
+            </h1>
+            <p class="lead load-in" style="--d: 0.2s">
+              Tú pones la idea y el negocio. Nuestro equipo te ayuda a montarlo,
+              mantenerlo y hacerlo crecer en línea. Este servicio se cotiza
+              aparte de los planes de Catify.
+            </p>
+          </div>
+        </div>
+        <div class="band">
+          <div class="wrap split">
+            <div class="section-head reveal" style="margin: 0">
+              <span class="eyebrow">Qué incluye</span>
+              <h2>Lo que podemos hacer contigo</h2>
+              <ul
+                class="checklist"
+                id="acompana-list"
+                style="font-size: 17px"
+              ></ul>
+            </div>
+            <ol class="steps reveal" style="grid-template-columns: 1fr">
+              <li>
+                <span class="num">1</span>
+                <h3>Nos cuentas tu idea</h3>
+                <p>Qué vendes, a quién y qué tienes hoy.</p>
+              </li>
+              <li>
+                <span class="num">2</span>
+                <h3>Armamos una propuesta</h3>
+                <p>
+                  Definimos qué parte del trabajo te toca a ti y cuál a
+                  nosotros.
+                </p>
+              </li>
+              <li>
+                <span class="num">3</span>
+                <h3>Te cotizamos</h3>
+                <p>Recibes un valor claro antes de empezar.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <div class="band mint">
+          <div class="wrap split">
+            <div class="section-head reveal" style="margin: 0">
+              <span class="eyebrow">Tu idea de negocio</span>
+              <h2>Cuéntanos qué tienes en mente</h2>
+              <p class="lead">
+                Por ahora lo hacemos por mensaje. Escríbenos con estos datos y
+                te respondemos con una cotización.
+              </p>
+              <ul class="checklist" id="idea-list"></ul>
+            </div>
+            <div class="panel reveal">
+              <div class="template" id="idea-template">
+                Hola, quiero cotizar el servicio Del Valle te acompaña. Mi
+                negocio: Qué vendo: Ciudad: Qué necesito:
+              </div>
+              <div class="btn-row">
+                <a
+                  class="btn"
+                  href="https://wa.me/573184235926?text=Hola%2C%20quiero%20cotizar%20el%20servicio%20Del%20Valle%20te%20acompa%C3%B1a.%0AMi%20negocio%3A%20%0AQu%C3%A9%20vendo%3A%20%0ACiudad%3A%20%0AQu%C3%A9%20necesito%3A%20"
+                  target="_blank"
+                  rel="noopener"
+                  ><span>Escribir por WhatsApp</span
+                  ><span class="btn-ic"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" /></svg></span
+                ></a>
+                <button
+                  class="btn plain soft"
+                  type="button"
+                  data-copy-target="idea-template"
+                >
+                  Copiar el mensaje
+                </button>
+              </div>
+              <p
+                class="status"
+                data-status="idea-template"
+                aria-live="polite"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LISTA DE ESPERA -->
+      <section class="view" id="v-lista-de-espera" hidden>
+        <div class="band mint tight">
+          <div class="wrap page-intro">
+            <span class="eyebrow live load-in">Lista de espera</span>
+            <h1 class="load-in" style="--d: 0.1s">Sé de los<br />primeros</h1>
+            <p class="lead load-in" style="--d: 0.2s">
+              Catify aún no abre. Escríbenos y te avisamos cuando esté listo
+              para que crees tu catálogo.
+            </p>
+          </div>
+        </div>
+        <div class="band">
+          <div class="wrap split">
+            <div class="section-head reveal" style="margin: 0">
+              <span class="eyebrow">Tu mensaje</span>
+              <h2>Dinos esto</h2>
+              <ul class="checklist" id="wait-list" style="font-size: 17px"></ul>
+            </div>
+            <div class="panel reveal">
+              <div class="template" id="wait-template">
+                Hola, quiero unirme a la lista de espera de Catify. Mi nombre:
+                Mi negocio: Plan que me interesa (Gratis, Básico o Plus):
+              </div>
+              <div class="btn-row">
+                <a
+                  class="btn"
+                  href="https://wa.me/573184235926?text=Hola%2C%20quiero%20unirme%20a%20la%20lista%20de%20espera%20de%20Catify.%0AMi%20nombre%3A%20%0AMi%20negocio%3A%20%0APlan%20que%20me%20interesa%20(Gratis%2C%20B%C3%A1sico%20o%20Plus)%3A%20"
+                  target="_blank"
+                  rel="noopener"
+                  ><span>Escribir por WhatsApp</span
+                  ><span class="btn-ic"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" /></svg></span
+                ></a>
+                <button
+                  class="btn plain soft"
+                  type="button"
+                  data-copy-target="wait-template"
+                >
+                  Copiar el mensaje
+                </button>
+              </div>
+              <p
+                class="status"
+                data-status="wait-template"
+                aria-live="polite"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PREGUNTAS -->
+      <section class="view" id="v-preguntas-frecuentes" hidden>
+        <div class="band mint tight">
+          <div class="wrap page-intro">
+            <span class="eyebrow load-in">Preguntas frecuentes</span>
+            <h1 class="load-in" style="--d: 0.1s">
+              Lo que más<br />nos preguntan
+            </h1>
+            <p class="lead load-in" style="--d: 0.2s">
+              Si no encuentras tu duda, escríbenos al final de la página.
+            </p>
+          </div>
+        </div>
+        <div class="band">
+          <div class="wrap" id="faq-root" style="max-width: 860px"></div>
+        </div>
+      </section>
+
+      <!-- CONTACTO -->
+      <section class="band mint" aria-labelledby="contact-title">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <span class="eyebrow">Una duda puntual</span>
+            <h2 id="contact-title">Escríbenos,<br />te respondemos</h2>
+          </div>
+          <div class="contact reveal">
+            <div class="panel">
+              <span class="eyebrow">Correo</span>
+              <p class="big">delvallesoftware@gmail.com</p>
+              <p class="status" data-status="mail" aria-live="polite">
+                Asunto sugerido: Preguntas de Catify
+              </p>
+              <div class="btn-row">
+                <a
+                  class="btn sm plain"
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=delvallesoftware@gmail.com&su=Preguntas%20de%20Catify"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir en Gmail</a
+                >
+                <button
+                  class="btn sm plain soft"
+                  type="button"
+                  data-copy-text="delvallesoftware@gmail.com"
+                  data-copy-key="mail"
+                >
+                  Copiar correo
+                </button>
+              </div>
+            </div>
+            <div class="panel">
+              <span class="eyebrow">WhatsApp</span>
+              <p class="big">+57 318 4235926</p>
+              <p class="status" data-status="wa" aria-live="polite">
+                Del Valle Software
+              </p>
+              <div class="btn-row">
+                <a
+                  class="btn sm plain"
+                  href="https://wa.me/573184235926?text=Hola%2C%20tengo%20una%20pregunta%20sobre%20Catify%3A%20"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir WhatsApp</a
+                >
+                <button
+                  class="btn sm plain soft"
+                  type="button"
+                  data-copy-text="+57 318 4235926"
+                  data-copy-key="wa"
+                >
+                  Copiar número
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap site-foot">
+        <span
+          ><b style="letter-spacing: 0.3em; color: var(--ink)"
+            >CATIFY<i style="font-style: normal; color: var(--green)">.</i></b
+          >
+          &nbsp;Un producto de Del Valle Software. Caicedonia, Valle del
+          Cauca.</span
+        >
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        var CHECK =
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
+        var CROSS =
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+        var plans = [
+          {
+            name: 'Gratis',
+            tag: 'Para empezar',
+            text: 'Para probar Catify con un catálogo pequeño.',
+            items: [
+              [1, 'Inventario limitado (5)'],
+              [0, 'Sin registro de ventas (módulo contable)'],
+            ],
+          },
+          {
+            name: 'Básico',
+            tag: 'Para crecer',
+            text: 'Un poco más de espacio para tus productos.',
+            items: [
+              [1, 'Inventario limitado (10)'],
+              [0, 'Sin registro de ventas (módulo contable)'],
+            ],
+          },
+          {
+            name: 'Plus',
+            tag: 'Para todo el negocio',
+            text: 'Para llevar el control completo de tu negocio.',
+            featured: true,
+            items: [
+              [1, 'Inventario ilimitado'],
+              [1, 'Módulo contable'],
+            ],
+          },
+        ];
+        function planCard(p) {
+          var li = p.items
+            .map(function (i) {
+              return (
+                '<li class="' +
+                (i[0] ? 'yes' : 'no') +
+                '">' +
+                (i[0] ? CHECK : CROSS) +
+                '<span>' +
+                i[1] +
+                '</span></li>'
+              );
+            })
+            .join('');
+          return (
+            '<article class="plan' +
+            (p.featured ? ' featured' : '') +
+            '"><span class="tag">' +
+            p.tag +
+            '</span><h3>' +
+            p.name +
+            '</h3><p class="sub">' +
+            p.text +
+            '</p><ul>' +
+            li +
+            '</ul><p class="price-soon">Precio por definir</p></article>'
+          );
+        }
+        var cards = plans.map(planCard).join('');
+        document.getElementById('home-plans').innerHTML = cards;
+        document.getElementById('all-plans').innerHTML = cards;
+
+        function fill(id, items) {
+          document.getElementById(id).innerHTML = items
+            .map(function (t) {
+              return '<li>' + CHECK + '<span>' + t + '</span></li>';
+            })
+            .join('');
+        }
+        fill('home-acompana', [
+          'Creación y actualización de tu catálogo',
+          'Fotos de tu inventario',
+          'Manejo de redes sociales y publicidad',
+          'Apoyo en la gestión diaria de tu negocio',
+        ]);
+        fill('acompana-list', [
+          'Creación y actualización de tu catálogo, producto por producto.',
+          'Fotos de tu inventario para que se vea bien en pantalla.',
+          'Manejo de redes sociales: publicaciones, videos y publicidad.',
+          'Identidad de marca: nombre, colores y tono de voz.',
+          'Apoyo en la gestión de pedidos y en la operación del negocio.',
+        ]);
+        fill('idea-list', [
+          'El nombre de tu negocio o de tu idea',
+          'Qué vendes y a quién',
+          'En qué ciudad estás',
+          'Qué parte quieres que hagamos por ti',
+        ]);
+        fill('wait-list', [
+          'Tu nombre',
+          'El nombre de tu negocio',
+          'El plan que te interesa',
+        ]);
+
+        var faqs = [
+          {
+            g: 'Sobre Catify',
+            q: [
+              [
+                '¿Qué es Catify?',
+                'Es una plataforma para que los negocios locales publiquen su catálogo digital, reciban pedidos y les hagan seguimiento.',
+              ],
+              [
+                '¿Cuándo abre?',
+                'Muy pronto. Todavía no hay una fecha. Si te unes a la lista de espera, te avisamos.',
+              ],
+              [
+                '¿Mis clientes necesitan una cuenta para pedir?',
+                'No. Pueden armar su carrito y hacer el pedido sin cuenta.',
+              ],
+              [
+                '¿Puedo cobrar en línea?',
+                'Por ahora no hay pagos en línea. Los pedidos se registran y tú acuerdas el pago con tu cliente.',
+              ],
+              [
+                '¿Puedo personalizar mi tienda?',
+                'Sí. Podrás elegir colores, portada y textos.',
+              ],
+            ],
+          },
+          {
+            g: 'Planes',
+            q: [
+              [
+                '¿Cuánto cuesta?',
+                'Los precios aún no están definidos. Hay un plan Gratis para empezar.',
+              ],
+              [
+                '¿Qué diferencia hay entre los planes?',
+                'Cambia el tamaño del inventario y el acceso al módulo contable. El plan Plus tiene inventario ilimitado y módulo contable.',
+              ],
+              [
+                '¿Qué es el registro de ventas?',
+                'Es parte del módulo contable. Los planes Gratis y Básico no lo incluyen.',
+              ],
+            ],
+          },
+          {
+            g: 'Del Valle te acompaña',
+            q: [
+              [
+                '¿Qué es Del Valle te acompaña?',
+                'Es un servicio extra en el que nuestro equipo te ayuda a gestionar tu negocio en línea: catálogo, redes sociales y operación.',
+              ],
+              [
+                '¿Está incluido en los planes?',
+                'No. Se cotiza aparte según lo que necesites.',
+              ],
+              [
+                '¿Cómo lo pido?',
+                'Escríbenos por WhatsApp con tu idea de negocio desde la página del servicio y te respondemos con una cotización.',
+              ],
+            ],
+          },
+        ];
+        document.getElementById('faq-root').innerHTML = faqs
+          .map(function (g) {
+            return (
+              '<div class="faq-group"><h3>' +
+              g.g +
+              '</h3>' +
+              g.q
+                .map(function (x) {
+                  return (
+                    '<details><summary>' +
+                    x[0] +
+                    '</summary><p>' +
+                    x[1] +
+                    '</p></details>'
+                  );
+                })
+                .join('') +
+              '</div>'
+            );
+          })
+          .join('');
+
+        // Cinta de tipos de negocio
+        var kinds = [
+          'Cafeterías',
+          'Ferreterías',
+          'Tiendas de calzado',
+          'Restaurantes',
+          'Panaderías',
+          'Boutiques',
+          'Papelerías',
+          'Emprendimientos',
+          'Heladerías',
+          'Tiendas de barrio',
+        ];
+        var chips = kinds
+          .map(function (k) {
+            return '<span class="chip">' + k + '</span>';
+          })
+          .join('');
+        document.getElementById('track').innerHTML = chips + chips;
+
+        // Carrito de ejemplo
+        var count = 0,
+          pill = document.getElementById('cart-pill');
+        document.querySelectorAll('.add').forEach(function (b) {
+          b.addEventListener('click', function () {
+            count++;
+            pill.textContent = 'Carrito · ' + count;
+            pill.classList.remove('bump');
+            void pill.offsetWidth;
+            pill.classList.add('bump');
+          });
+        });
+
+        // Rutas por hash
+        var views = [
+          'inicio',
+          'planes',
+          'del-valle-te-acompana',
+          'lista-de-espera',
+          'preguntas-frecuentes',
+        ];
+        function route() {
+          var h = (location.hash || '').replace('#', '');
+          if (views.indexOf(h) < 0) h = 'inicio';
+          views.forEach(function (v) {
+            document.getElementById('v-' + v).hidden = v !== h;
+          });
+          document.querySelectorAll('[data-nav]').forEach(function (a) {
+            if (a.getAttribute('data-nav') === h)
+              a.setAttribute('aria-current', 'page');
+            else a.removeAttribute('aria-current');
+          });
+          window.scrollTo(0, 0);
+        }
+        window.addEventListener('hashchange', route);
+        route();
+
+        // Copiar
+        function setStatus(key, msg) {
+          document
+            .querySelectorAll('[data-status="' + key + '"]')
+            .forEach(function (el) {
+              el.textContent = msg;
+            });
+        }
+        function copyText(text, key) {
+          function done() {
+            setStatus(key, 'Copiado.');
+          }
+          function fail() {
+            setStatus(key, 'No se pudo copiar. Selecciona el texto y cópialo.');
+          }
+          try {
+            navigator.clipboard.writeText(text).then(done, fail);
+          } catch (e) {
+            fail();
+          }
+        }
+        document.querySelectorAll('[data-copy-target]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var id = b.getAttribute('data-copy-target');
+            copyText(document.getElementById(id).textContent, id);
+          });
+        });
+        document.querySelectorAll('[data-copy-text]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            copyText(
+              b.getAttribute('data-copy-text'),
+              b.getAttribute('data-copy-key'),
+            );
+          });
+        });
+
+        // Tema: claro por defecto
+        var root = document.documentElement,
+          tbtn = document.getElementById('theme-toggle');
+        function applyTheme(t) {
+          root.setAttribute('data-theme', t);
+          tbtn.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
+          tbtn.setAttribute(
+            'aria-label',
+            t === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro',
+          );
+        }
+        var saved = null;
+        try {
+          saved = localStorage.getItem('catify-theme');
+        } catch (e) {}
+        applyTheme(saved === 'dark' ? 'dark' : 'light');
+        tbtn.addEventListener('click', function () {
+          var next =
+            root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.classList.add('theming');
+          applyTheme(next);
+          try {
+            localStorage.setItem('catify-theme', next);
+          } catch (e) {}
+          setTimeout(function () {
+            root.classList.remove('theming');
+          }, 800);
+        });
+      })();
+    </script>
+  </body>
+</html>
