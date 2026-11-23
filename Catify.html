@@ -957,8 +957,9 @@
         stroke: currentColor;
       }
       .price-soon {
-        font-size: 13px;
-        opacity: 0.7;
+        font-size: 22px;
+        font-weight: 700;
+        opacity: 1;
         border-top: 1px dashed color-mix(in srgb, currentColor 30%, transparent);
         padding-top: 16px;
       }
@@ -1129,16 +1130,86 @@
         font-size: clamp(48px, 9vw, 120px);
         line-height: 0.95;
       }
-      .site-foot {
+      .site-footer {
         border-top: 1px solid var(--line);
-        padding-block: 36px 56px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px 32px;
-        justify-content: space-between;
-        align-items: center;
+        background: var(--mint);
+      }
+      .site-footer-main {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(160px, 1fr) auto;
+        align-items: start;
+        gap: 36px;
+        padding-block: 48px;
+      }
+      .site-footer-brand {
+        color: var(--ink);
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        text-decoration: none;
+      }
+      .site-footer-brand i {
+        color: var(--green);
+        font-style: normal;
+      }
+      .site-footer-about p {
+        max-width: 360px;
+        margin: 12px 0 0;
         color: var(--muted);
         font-size: 14px;
+        line-height: 1.7;
+      }
+      .site-footer-about a:not(.site-footer-brand),
+      .site-footer-nav a,
+      .site-footer-company {
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .site-footer-about a:not(.site-footer-brand),
+      .site-footer-nav a {
+        text-underline-offset: 4px;
+      }
+      .site-footer-about a:not(.site-footer-brand):hover,
+      .site-footer-nav a:hover {
+        color: var(--green-text);
+        text-decoration: underline;
+      }
+      .site-footer-nav {
+        display: grid;
+        gap: 12px;
+        font-size: 14px;
+      }
+      .site-footer-company {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 16px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 700;
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .site-footer-company:hover {
+        border-color: var(--green);
+        background: var(--mint-2);
+      }
+      .site-footer-company span {
+        color: var(--green-text);
+        font-size: 17px;
+      }
+      .site-footer-legal {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 8px 24px;
+        padding-block: 18px 24px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
       }
       .theme-btn {
         font: 500 13px var(--font-body);
@@ -1251,11 +1322,30 @@
         .split {
           grid-template-columns: 1fr;
         }
+        .site-footer-main {
+          grid-template-columns: 1fr auto;
+        }
+        .site-footer-about {
+          grid-column: 1 / -1;
+        }
         .hero-grid {
           gap: 40px;
         }
         .stack > .load-in:nth-child(2) .mini {
           margin-left: 0;
+        }
+      }
+      @media (max-width: 560px) {
+        .site-footer-main {
+          grid-template-columns: 1fr;
+          gap: 28px;
+          padding-block: 36px;
+        }
+        .site-footer-about {
+          grid-column: auto;
+        }
+        .site-footer-legal {
+          display: grid;
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -1603,8 +1693,7 @@
               <span class="eyebrow">Planes</span>
               <h2>Empieza pequeño,<br />crece cuando lo necesites</h2>
               <p class="lead">
-                Estos son los tres planes que estamos preparando. Aún no tienen
-                precio.
+                Dos planes claros, con fotos y espacio para tu catálogo.
               </p>
             </div>
             <div class="plans reveal" id="home-plans"></div>
@@ -1649,8 +1738,7 @@
             <span class="eyebrow load-in">Planes de Catify</span>
             <h1 class="load-in" style="--d: 0.1s">Elige cómo empezar</h1>
             <p class="lead load-in" style="--d: 0.2s">
-              Estamos preparando tres planes. Los precios se anunciarán antes
-              del lanzamiento y las condiciones pueden ajustarse.
+              Elige el plan que mejor se adapte a la cantidad de productos de tu negocio.
             </p>
           </div>
         </div>
@@ -1665,35 +1753,35 @@
                 <thead>
                   <tr>
                     <th></th>
-                    <th>Gratis</th>
-                    <th>Básico</th>
-                    <th>Plus</th>
+                    <th>Estándar</th>
+                    <th>Lite</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Inventario</td>
-                    <td>Limitado (5)</td>
-                    <td>Limitado (10)</td>
-                    <td>Ilimitado</td>
+                    <td>Productos</td>
+                    <td>20</td>
+                    <td>5</td>
                   </tr>
                   <tr>
-                    <td>Registro de ventas (módulo contable)</td>
-                    <td>No</td>
-                    <td>No</td>
-                    <td>Sí</td>
+                    <td>Fotos por producto</td>
+                    <td>3</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td>Peso máximo por foto</td>
+                    <td>20 MB</td>
+                    <td>20 MB</td>
                   </tr>
                   <tr>
                     <td>Del Valle te acompaña</td>
                     <td>Servicio aparte</td>
                     <td>Servicio aparte</td>
-                    <td>Servicio aparte</td>
                   </tr>
                   <tr>
                     <td>Precio</td>
-                    <td>Por definir</td>
-                    <td>Por definir</td>
-                    <td>Por definir</td>
+                    <td>$30.000</td>
+                    <td>$10.000</td>
                   </tr>
                 </tbody>
               </table>
@@ -1828,12 +1916,12 @@
             <div class="panel reveal">
               <div class="template" id="wait-template">
                 Hola, quiero unirme a la lista de espera de Catify. Mi nombre:
-                Mi negocio: Plan que me interesa (Gratis, Básico o Plus):
+                Mi negocio: Plan que me interesa (Estándar o Lite):
               </div>
               <div class="btn-row">
                 <a
                   class="btn"
-                  href="https://wa.me/573184235926?text=Hola%2C%20quiero%20unirme%20a%20la%20lista%20de%20espera%20de%20Catify.%0AMi%20nombre%3A%20%0AMi%20negocio%3A%20%0APlan%20que%20me%20interesa%20(Gratis%2C%20B%C3%A1sico%20o%20Plus)%3A%20"
+                  href="https://wa.me/573184235926?text=Hola%2C%20quiero%20unirme%20a%20la%20lista%20de%20espera%20de%20Catify.%0AMi%20nombre%3A%20%0AMi%20negocio%3A%20%0APlan%20que%20me%20interesa%20(Est%C3%A1ndar%20o%20Lite)%3A%20"
                   target="_blank"
                   rel="noopener"
                   ><span>Escribir por WhatsApp</span
@@ -1938,20 +2026,48 @@
       </section>
     </main>
 
-    <footer>
-      <div class="wrap site-foot">
-        <span
-          ><b style="letter-spacing: 0.3em; color: var(--ink)"
-            >CATIFY<i style="font-style: normal; color: var(--green)">.</i></b
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="site-footer-main">
+          <div class="site-footer-about">
+            <a class="site-footer-brand" href="#inicio" aria-label="Catify, ir al inicio">
+              CATIFY<i>.</i>
+            </a>
+            <p>
+              Un mundo de negocios por descubrir. Un producto de
+              <a href="https://del-valle-software.vercel.app/" target="_blank" rel="noopener noreferrer">
+                Del Valle Software
+              </a>.
+            </p>
+          </div>
+          <nav class="site-footer-nav" aria-label="Enlaces del pie de página">
+            <a href="#planes" data-nav="planes">Planes</a>
+            <a href="#preguntas-frecuentes" data-nav="preguntas-frecuentes">Preguntas frecuentes</a>
+            <a href="#lista-de-espera" data-nav="lista-de-espera">Lista de espera</a>
+          </nav>
+          <a
+            class="site-footer-company"
+            href="https://del-valle-software.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-          &nbsp;Un producto de Del Valle Software. Caicedonia, Valle del
-          Cauca.</span
-        >
+            Conoce Del Valle Software <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="site-footer-legal">
+          <span>
+            © <span id="copyright-year">2026</span> Del Valle Software. Catify es
+            un producto de Del Valle Software. Todos los derechos reservados.
+          </span>
+          <span>Caicedonia, Valle del Cauca, Colombia</span>
+        </div>
       </div>
     </footer>
 
     <script>
       (function () {
+        document.getElementById('copyright-year').textContent =
+          new Date().getFullYear();
         var CHECK =
           '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
         var CROSS =
@@ -1959,31 +2075,26 @@
 
         var plans = [
           {
-            name: 'Gratis',
-            tag: 'Para empezar',
-            text: 'Para probar Catify con un catálogo pequeño.',
-            items: [
-              [1, 'Inventario limitado (5)'],
-              [0, 'Sin registro de ventas (módulo contable)'],
-            ],
-          },
-          {
-            name: 'Básico',
+            name: 'Estándar',
             tag: 'Para crecer',
-            text: 'Un poco más de espacio para tus productos.',
-            items: [
-              [1, 'Inventario limitado (10)'],
-              [0, 'Sin registro de ventas (módulo contable)'],
-            ],
-          },
-          {
-            name: 'Plus',
-            tag: 'Para todo el negocio',
-            text: 'Para llevar el control completo de tu negocio.',
+            text: 'Un catálogo completo para mostrar más productos.',
+            price: '$30.000',
             featured: true,
             items: [
-              [1, 'Inventario ilimitado'],
-              [1, 'Módulo contable'],
+              [1, '20 productos'],
+              [1, '3 fotos por producto'],
+              [1, '20 MB por foto'],
+            ],
+          },
+          {
+            name: 'Lite',
+            tag: 'Para empezar',
+            text: 'Lo esencial para publicar tu catálogo.',
+            price: '$10.000',
+            items: [
+              [1, '5 productos'],
+              [1, '3 fotos por producto'],
+              [1, '20 MB por foto'],
             ],
           },
         ];
@@ -2012,7 +2123,9 @@
             p.text +
             '</p><ul>' +
             li +
-            '</ul><p class="price-soon">Precio por definir</p></article>'
+            '</ul><p class="price-soon">' +
+            p.price +
+            '</p></article>'
           );
         }
         var cards = plans.map(planCard).join('');
@@ -2082,15 +2195,15 @@
             q: [
               [
                 '¿Cuánto cuesta?',
-                'Los precios aún no están definidos. Hay un plan Gratis para empezar.',
+                'El plan Lite cuesta $10.000 y el plan Estándar cuesta $30.000.',
               ],
               [
                 '¿Qué diferencia hay entre los planes?',
-                'Cambia el tamaño del inventario y el acceso al módulo contable. El plan Plus tiene inventario ilimitado y módulo contable.',
+                'Lite incluye 5 productos y Estándar incluye 20. Ambos permiten 3 fotos por producto y fotos de hasta 20 MB.',
               ],
               [
-                '¿Qué es el registro de ventas?',
-                'Es parte del módulo contable. Los planes Gratis y Básico no lo incluyen.',
+                '¿Puedo subir fotos grandes?',
+                'Sí. Ambos planes permiten hasta 20 MB por foto.',
               ],
             ],
           },
